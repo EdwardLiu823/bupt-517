@@ -1,0 +1,106 @@
+#define PIN 4 //接收传感器的信号
+#include <Adafruit_NeoPixel.h> //引用此文件
+#define PIN2 6   //led灯控制引脚
+#define PIN2_NUM 2 //允许接的led灯的个数
+
+#define val_max 255
+#define val_min 0   
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIN2_NUM, PIN2, NEO_GRB + NEO_KHZ800);  //该函数第一个参数控制串联灯的个数，第二个是控制用哪个pin脚输出，第三个显示颜色和变化闪烁频率
+ void colorSet(uint32_t c) ;
+void rainbowCycle( int r, int g, int b, uint8_t wait);
+void rainbowlCycle( int r, int g, int b, uint8_t wait);
+void setup()
+{
+  strip.begin(); //准备对灯珠进行数据发送
+  strip.show(); //初始化LED为关的状
+  pinMode(PIN, INPUT); // 设置为输入
+  pinMode(PIN2,OUTPUT);// 设置为输出
+}
+void loop()
+{
+  int vale = digitalRead(PIN); // 读取引脚电平
+  if (vale==1)  // 若检测到有人，则val值为1
+  {
+     rainbowCycle( 255, 0, 0, 1); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 1); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 1); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 1); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 1); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 1); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 1); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 1); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 5); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 5); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 1); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 1); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 1); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 1); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 5); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 5); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 1); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 1); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 1); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 1); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 1); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 1); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 5); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 5); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 1); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 1); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 1); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 1); //红色呼吸 暗
+     rainbowCycle( 255, 0, 0, 5); //红色呼吸 亮
+     rainbowlCycle( 255, 0, 0, 5); //红色呼吸 暗
+    //rainbowCycle( 0,255,0, 20); //红色呼吸 亮
+    // rainbowlCycle( 0,255,0, 15); //红色呼吸 暗
+    //rainbowCycle( 0, 0, 255, 20); //红色呼吸 亮
+    //rainbowlCycle( 0, 0, 255, 15); //红色呼吸 暗
+   
+  }
+  else //没人 ，起到一个电源作用，表示待机。
+  {
+   inrainbowCycle( 255, 0, 0, 20); //红色呼吸 亮
+   inrainbowCycle( 0, 255, 0, 20); //绿色呼吸 亮
+   inrainbowCycle( 0, 0, 255, 20); //蓝色呼吸 亮
+  } 
+}
+void colorSet(uint32_t c) 
+{
+  for (uint16_t i = 0; i < strip.numPixels(); i++) 
+  //从0自增到LED灯个数减1
+{
+strip.setPixelColor(i, c); //此函数表示将第i个LED点亮
+}
+  strip.show(); //LED灯显示
+}
+
+void rainbowCycle( int r, int g, int b, uint8_t wait) {
+  for (int val = 0; val < 255; val++) 
+  //   val由0自增到254不断循环
+  {
+    colorSet(strip.Color(map(val, val_min, val_max, 0, r), map(val, val_min, val_max, 0, g), map(val, val_min, val_max, 0, b)));
+
+//红绿蓝LED灯依次从暗到亮
+/*“map(val,x,y,m,n)”函数为映射函数，可将某个区间的值（x-y）变幻成（m-n），val则是你需要用来映射的数据*/
+    delay(wait); //延时
+  }
+}
+void rainbowlCycle( int r, int g, int b, uint8_t wait) {
+for (int val = 255; val >= 0; val--)  //   val从255自减到0不断循环
+{
+  colorSet(strip.Color(map(val, val_min, val_max, 0, r), map(val, val_min, val_max, 0, g), map(val, val_min, val_max, 0, b)));
+
+  delay(wait); //延时
+}
+}
+void inrainbowCycle( int r, int g, int b, uint8_t wait) {
+  for (int val = 0; val < 2; val++) 
+  //   val由0自增到254不断循环
+  {
+    colorSet(strip.Color(map(val, val_min, val_max, 0, r), map(val, val_min, val_max, 0, g), map(val, val_min, val_max, 0, b)));
+
+//红绿蓝LED灯依次从暗到亮
+/*“map(val,x,y,m,n)”函数为映射函数，可将某个区间的值（x-y）变幻成（m-n），val则是你需要用来映射的数据*/
+    delay(wait); //延时
+  }
+}
