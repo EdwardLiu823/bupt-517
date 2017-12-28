@@ -1,0 +1,57 @@
+#include <Servo.h>
+Servo myservo;
+
+#define Pin_X A1
+#define Pin_Y A0
+
+#define servo_pin SDA
+
+int pose=5, angle = 90;
+int data;
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);    //串口初始化
+  pinMode(Pin_X, INPUT);
+  pinMode(Pin_Y, INPUT);
+  myservo.attach(servo_pin);
+}
+
+int uiStep()
+{
+  if (analogRead(Pin_Y) > 650)  //将Joystick的操作杆向上滑动进行关灯操作
+  {
+    if (analogRead(Pin_Y) < 750)
+      return 1;
+  }
+  if (analogRead(Pin_Y) > 300)  //将Joystick的操作杆向下滑动进行复位操作
+  {
+    delay(50);
+    if (analogRead(Pin_Y) < 400)
+      return 2;
+  }
+  return 0;
+}
+
+void loop() {
+  if (uiStep() == 1)
+  {
+    angle += pose;
+    if (angle > 180)
+      angle = 180;
+  }
+  else if (uiStep() == 2)
+  {
+    angle -= pose;
+    if (angle < 0)
+      angle = 0;
+  }
+  if (data != angle)
+  {
+    myservo.write(angle);
+    data=angle;
+  }
+  Serial.print(pose);
+  Serial.print("   ");
+  Serial.println(angle);
+}
